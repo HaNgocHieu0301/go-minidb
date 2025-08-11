@@ -1,0 +1,10 @@
+# Go
+bin/
+*.exe
+*.test
+*.out
+
+# Project
+data/
+.coverage
+.idea
