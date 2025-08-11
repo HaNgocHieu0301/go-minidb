@@ -58,7 +58,7 @@
 
 ## 7) Kế hoạch & cột mốc
 
-- Sprint 0: **Skeleton dự án, API stubs, CI cơ bản.** ✅ (hoàn thành)
+- Sprint 0: Skeleton dự án, API stubs, CI cơ bản.
 - Sprint 1: File append-only tối thiểu → `data.log` + restart get đúng.
 - Sprint 2: WAL + MemTable + khôi phục từ WAL.
 - Sprint 3: Flush → SSTable (sorted, block index).
@@ -95,3 +95,11 @@
 
 - Cập nhật **mục 10 (checklist)** và **mục 7 (kế hoạch)** sau mỗi sprint.
 - Ghi chú các quyết định kỹ thuật quan trọng ngay dưới mục liên quan.
+
+## 12) Ghi chú thiết kế — Sprint 1
+
+- **Record format:** `uvarint(keyLen) | uvarint(valueLen) | key | value`.
+- **Durability:** mỗi `Put/Delete` gọi `Flush + fsync` (vì `SyncEveryWrite=true`).
+- **Replay:** đọc toàn file, áp dụng "last-write-wins"; `valueLen==0` xem như delete tối giản.
+- **Hạn chế hiện tại:** chưa có checksum, chưa tách WAL riêng, chưa có MemTable/SSTable/Compaction → file log sẽ phình to. Các sprint 2–5 sẽ xử lý.
+- **Lý do chọn:** tối giản để đảm bảo persistence + dễ kiểm thử khởi động lại.
